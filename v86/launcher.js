@@ -1,5 +1,5 @@
 launchV86 = async function(type, content, dosImgUrl, screenContainer) {
-  var content = Uint8Array.from(atob(content), c => c.charCodeAt(0));
+  var contentBytes = Uint8Array.from(atob(content), c => c.charCodeAt(0));
   
   const config = {
     screen_container: screenContainer,
@@ -17,13 +17,13 @@ launchV86 = async function(type, content, dosImgUrl, screenContainer) {
     case 'com':
       const dosResponse = await fetch(dosImgUrl);
       const dosImg = new Uint8Array(await dosResponse.arrayBuffer());
-      dosImg.set(content, 0x26000);
+      dosImg.set(contentBytes, 0x26000);
       config.fda.buffer = dosImg.buffer;
       break;
 
     case 'mbr':
       const fdaImg = new Uint8Array(1474560);
-      fdaImg.set(content, 0);
+      fdaImg.set(contentBytes, 0);
       config.fda.buffer = fdaImg.buffer;
       break;
 
