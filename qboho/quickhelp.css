@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'IBMVGA8';
+    src: url(font/ibm_vga8.eot);
+    src: url(font/ibm_vga8.eot?#iefix) format('embedded-opentype'),
+         url(font/ibm_vga8.woff2) format('woff2'),
+         url(font/ibm_vga8.woff) format('woff'),
+         url(font/ibm_vga8.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    background-color: black;
+}
+
+.quickhelp-topic {
+    color: #AAAAAA;
+    font-family: IBMVGA8, monospace;
+    font-size:16px;
+    line-height:16px;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+}
+
+.quickhelp-topic, .quickhelp-topic:target ~ .quickhelp-topic:last-child {
+    display: none;
+}
+
+.quickhelp-topic:target, .quickhelp-topic:last-child {
+    display: block;
+}
+
+.quickhelp-topic b {
+    color: white;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic i {
+    color: #55FF55;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic u {
+    color: #AA0000;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic b i, .quickhelp-topic i b {
+    color: #55FFFF;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic b u, .quickhelp-topic u b {
+    color: white;
+    background-color: #55FFFF;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic u i, .quickhelp-topic i u {
+    color: #AAAAAA;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic b u i, .quickhelp-topic b i u, .quickhelp-topic u b i, .quickhelp-topic i b u, .quickhelp-topic u i b, .quickhelp-topic i u b {
+    background-color: black;
+    color: black;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
+
+.quickhelp-topic a, .quickhelp-topic a:active, .quickhelp-topic a:visited {
+    color: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    text-decoration: inherit;
+}
