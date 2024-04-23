@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="demo-baker.css">
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+        <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+        <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+        <script>
+            Dropzone.autoDiscover = false;
+        </script>
+    </head>
+    <body>
+        <header>
+            <h1>Demo Baker</h1>
+        </header>
+        <main>
+            <form name="demo-form">
+                <label for="demoName">Name</label>
+                <input name="demoName">
+
+                <label class="demo-type-label">
+                    <input type="radio" name="demoType" value="mbr" checked>
+                    <h3>Master Boot Record (MBR)</h3>
+                    <p>Demo runs directly from the master boot record (MBR) of a disk</p>
+                </label>
+                <label class="demo-type-label">
+                    <input type="radio" name="demoType" value="com">
+                    <h3>DOS .COM</h3>
+                    <p>Demo is a .com executable running on DOS</p>
+                </label>  
+
+                <div class="demo-drop-zone">
+                    <p class="status">No file selected</p>
+                    <p>Drag compiled binary file here</p>
+                    <p>Click to browse</p>
+                </div>
+                <input type="file" name="demoContent">                
+                
+                <button type="button" class="demoGenerate" disabled>Create Link</button>
+                <button type="button" class="demoPreview" disabled>Preview</button>
+                <span class="demoError"></span>
+
+                <div class="demoOutput"></div>
+            </form>
+        </main>
+        <footer>
+            © parkertomatoes, 2024
+        </footer>
+        <script type="module">
+            import { demoBaker, parseDemoBakerState } from './demo-baker-builder.js'
+            const initialState = parseDemoBakerState(location.search);
+            const demoForm = document.querySelector("form[name='demo-form']");
+            demoBaker(demoForm, initialState);
+        </script>
+    </body>
+</html>

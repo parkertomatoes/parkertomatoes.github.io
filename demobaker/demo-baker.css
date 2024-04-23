@@ -1,0 +1,106 @@
+#screen_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#screen {
+    white-space: pre;
+    position: relative;
+    font-family: Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: normal;
+}
+
+#screen, #vga {
+    -webkit-transform-origin: top left;
+    -moz-transform-origin: top left;
+    transform-origin: top left;
+}
+
+#vga {
+    background-color: #000;
+    touch-action: none;
+}
+
+/* Radio buttons */
+
+label.demo-type-label {
+    display: grid;
+    grid-template-areas: 
+        "input label"       
+        ".     description";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+}
+
+label.demo-type-label input {
+    grid-area: input;
+    align-self: center;
+    margin: 1em 1em 0 1em;
+}
+
+label.demo-type-label h3 {
+    font-size: 14pt;
+    font-weight: normal;
+    align-self: end;
+    grid-area: label;
+    margin: 0;
+}
+label.demo-type-label p {
+    font-size: 10pt;
+    grid-area: description;
+    margin: 0;
+    opacity: 80%;
+}
+
+form[name="demo-form"] .demoContent {
+    margin-top: 1em;
+}
+
+form[name="demo-form"] .demoGenerate {
+    margin-top: 1em;
+}
+
+form[name="demo-form"] .demo-drop-zone {
+    margin-top: 1em;
+    background: none;
+    padding: 1em;
+    border: 2px dashed gray;
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+form[name="demo-form"] .demo-drop-zone > p {
+    margin: 0;
+}
+form[name="demo-form"] .demo-drop-zone > p.status::before {
+    content: "[ ";
+}
+form[name="demo-form"] .demo-drop-zone > p.status::after {
+    content: " ]";
+}
+
+form[name="demo-form"] .demo-drop-zone > p.status {
+    opacity: 50%;
+}
+
+form[name="demo-form"] input[name="demoContent"] {
+    position: fixed;
+    top: -100%;
+    left: -100%;
+}
+
+form[name="demo-form"] .demoError {
+    color: #cc0000;
+    margin-left: 1em;
+    text-wrap: nowrap;
+}
+
+form[name="demo-form"] .demoOutput {
+    word-wrap: break-word;
+}

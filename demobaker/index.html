@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="demo-baker.css">
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    </head>
+    <body>
+        <header>
+            <h1>Demo Baker</h1>
+        </header>
+        <main>
+            <div id="screen_container">
+                <div id="screen"></div>
+                <canvas id="vga"></canvas>
+            </div>
+            <div id="editLink"></div>
+        </main>
+        <footer>
+            This demo was packaged with Demo Baker. <a href="build.html">Create a demo</a>
+        </footer>
+        <script src="v86/libv86.js"></script>
+        <script type="module">
+            import { start } from './demo-baker.js';
+            addEventListener('load', start);
+        </script>
+    </body>
+</html>
