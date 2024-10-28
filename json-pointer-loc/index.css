@@ -1,0 +1,75 @@
+body {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+}
+
+header a {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    padding: 10px 10px 0 10px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+header a img {
+    object-fit: cover;
+    height: 2em;
+}
+
+header h1 {
+    font: bold 24px sans-serif;
+    margin: 10px 10px 0 10px;
+}
+
+header div {
+    font: 16px sans-serif;
+    padding: 0px 10px;
+}
+
+main {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+section#pointer-panel {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+
+#pointer {
+    font: 16px sans-serif;
+}
+
+#output {
+    font: 16px sans-serif;
+}
+
+section#editor-panel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
