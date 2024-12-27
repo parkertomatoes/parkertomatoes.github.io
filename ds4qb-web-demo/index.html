@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <link rel="icon" href="data:,">
-        <script src="v86/libv86.js"></script>
-      <script type="module" crossorigin src="./assets/index-D74qutwU.js"></script>
+        <script src="./v86/libv86.js"></script>
+      <script type="module" crossorigin src="/assets/index-D6WJjl-s.js"></script>
     </head>
     <body>
         <style>
@@ -12,11 +12,45 @@
                 width: 640px !important;
                 height: 480px !important;
             }
+            main {
+                display: flex;
+                flex-direction: row;
+            }
+            section#gameindex {
+                padding: 1em;
+            }
+            section#game {
+                padding: 1em 1em 1em 0;
+            }
         </style>
-        <div id="screen_container">
-            <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-            <canvas style="display: none"></canvas>
-        </div>
-        <button id="download-img">Download HD Image</button>
+        <h1>ds4qb-web Gallery</h1>
+        <p>This is a list of known games using the DS4QB2 or DS4QB++ audio engine</p>
+        <main>
+            <section id="gameindex">
+                <table id="gametable">
+                    <tr><td colspan="3"><h3>DS4QB2 Games</h3></td></tr>
+                    <tr id="ds4qb2games">
+                        <th>Game</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr><td colspan="3"><h3>DS4QB++ Games</h3></td></tr>
+                    <tr id="ds4qbppgames">
+                        <th>Game</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="game">
+                <div id="screen_container">
+                    <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+                    <canvas style="display: none"></canvas>
+                </div>
+                <button id="download">Download HDA</button>
+                <!--<button id="download-fa">Download FDA</button>-->
+            </section>
+        </main>
     </body>
 </html>
