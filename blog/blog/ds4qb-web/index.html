@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Restoring a 22-Year-Old Game’s Audio Hack With V86</title>
+		<meta name="description" content="A pit for posts about my side projects.">
+		<link rel="alternate" href="feed/feed.xml" type="application/atom+xml" title="Novelty Ice Cubes">
+		
+		<style>/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}
+/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050F;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+img[width][height] {
+  height: auto;
+}
+img[src$=".svg"] {
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+.links-nextprev > * {
+	flex-grow: 1;
+}
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em .5em;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+	margin-right: 2em;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+	margin-right: 1em;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}</style>
+	</head>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/" class="home-link">Novelty Ice Cubes</a>
+			<nav>
+				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/">Home</a></li>
+					<li class="nav-item"><a href="/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/about/">About</a></li>
+					<li class="nav-item"><a href="/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="https://github.com/parkertomatoes">Github</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="skip">
+			<heading-anchors>
+				
+<h1 id="restoring-a-22-year-old-game-s-audio-hack-with-v86">Restoring a 22-Year-Old Game’s Audio Hack With V86</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-01-11">11 January 2025</time></li>
+</ul>
+
+<p>The Internet Archive is a great place to find gems like <a href="https://archive.org/details/SquealerTnt">Squealer TNT</a>, a DOS clone of <a href="https://www.mobygames.com/game/18582/psycho-pigs-uxb/">“Psycho Pig UXB”</a> (itself a console port of the Japanese arcade game <a href="https://en.wikipedia.org/wiki/Butasan">Butasan</a>). It’s a top-down game where pigs throw bombs at each other. They squeal when you hit them with a bomb, there’s banjo music, and your pig dances when you win. It’s a delight!</p>
+<video autoplay="" loop="" muted="" title="Gameplay footage of pigs dancing in Squealer TNT">
+  <source src="dance.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<p>…or at least it would be if it had sound. The Internet Archive’s online player has no audio, making the game a joyless exercise in silent frustration. If I throw a bomb at a cartoon pig, and it doesn’t make a funny sound, what is even the point?</p>
+<p>Luckily I have a holiday tradition of going on esoteric quests involving PC emulation, from making a <a href="https://parkertomatoes.github.io/basbolt/">BASIC themed imitation</a> of Compiler Explorer to stuffing 2,000 demoscene demos from Pouet into a <a href="https://parkertomatoes.github.io/demo-parade">carousel</a>. This year, I’m doing a public service: I’m going to make those pigs squeal again.</p>
+<h2 id="the-silence-of-the-pigs">The Silence Of The Pigs</h2>
+<p>Most DOS games use the PC speaker or Sound Blaster and work fine in online DOSBox wrappers like <a href="https://js-dos.com/overview.html">js-dos</a>. This game goes in a weird direction, and fixing the audio is going to need a full PC-in-the-browser emulator like Fabian Hemmer’s <a href="https://copy.sh/v86">V86</a>.</p>
+<p>To start up a DOS PC in V86, you just need a few files:</p>
+<ul>
+<li>A QEMU-compatible BIOS file like <a href="https://seabios.org">SeaBIOS</a></li>
+<li>A QEMU-compatible VGA bios file like <a href="https://www.nongnu.org/vgabios/">BOCH’s</a></li>
+<li>A DOS boot disk image like the one <a href="https://archive.org/details/dos-6.22">here</a></li>
+<li>A <a href="https://unix.stackexchange.com/a/629494">FAT16 hard disk image</a> with the game inside.</li>
+</ul>
+<p>Stub some HTML for the viewport</p>
+<pre class="language-html" tabindex="0"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>screen_container<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">white-space</span><span class="token punctuation">:</span> pre<span class="token punctuation">;</span> <span class="token property">font</span><span class="token punctuation">:</span> 14px monospace<span class="token punctuation">;</span> <span class="token property">line-height</span><span class="token punctuation">:</span> 14px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>canvas</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none</span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>canvas</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre>
+<p>And start the emulator like so:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">var</span> emulator <span class="token operator">=</span> window<span class="token punctuation">.</span>emulator <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">V86</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        <span class="token literal-property property">screen_container</span><span class="token operator">:</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"screen_container"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bios</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"seabios.bin"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">vga_bios</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"vgabios.bin"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">fda</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"bootdisk.img"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">hda</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">url</span><span class="token operator">:</span> “hda<span class="token punctuation">.</span>img” <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">autostart</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Sure enough, this boots up a DOS prompt. I type SQUEALER to run the game, but it doesn’t even start. It hangs with a strange error:</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/yVLb0_E3Of-1280.avif 1280w"><source type="image/webp" srcset="/blog/ds4qb-web/yVLb0_E3Of-1280.webp 1280w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/yVLb0_E3Of-1280.png" alt="Error saying &quot;Illegal command: start&quot;" width="1280" height="800"></picture></p>
+<h2 id="a-porcine-anachronism">A Porcine Anachronism</h2>
+<p>Squealer TNT is already strange in that it’s a DOS game written in 2002. It’s further strange in that it uses <a href="https://web.archive.org/web/20010612125157fw_/http://www.aethersoft.com/html/products.htm">DS4QB2</a> as its sound driver. The game runs in real-mode DOS due to it being written with Microsoft QuickBASIC. In order to bust out of the limitations of real mode it <em>cheats</em> by running a command, <code>START DS4QB2.EXE</code>. This is a Win9X Visual Basic program that runs in the background and plays sounds using the BASS audio library.</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/OvoOETSUnb-1298.avif 1298w"><source type="image/webp" srcset="/blog/ds4qb-web/OvoOETSUnb-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/OvoOETSUnb-1298.svg" alt="Diagram showing " width="1298" height="496"></picture></p>
+<p>The DS4QB2 sound engine takes a &quot;hold my beer&quot; approach to inter-process communication. 16-bit DOS programs in Windows 95 are supposed to be isolated in their little VM86 shell, but thanks to the <a href="https://devblogs.microsoft.com/oldnewthing/20071224-00/?p=24063">insanely complex</a> 16-bit driver fallback mechanism of Windows 95, both 16-bit and 32-bit programs are granted shared access to the legacy DMA controller for floppy disk transfers and ISA cards. DOS programs signal DS4QB2 by writing to the DMA channel 0 address line (aka port 0). And it passes parameters by writing them to a file.</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/cUrbVCwsia-1298.avif 1298w"><source type="image/webp" srcset="/blog/ds4qb-web/cUrbVCwsia-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/cUrbVCwsia-1298.svg" alt="Diagram showing " width="1298" height="1014"></picture>
+<em>You may want to avoid playing this game from a floppy drive</em></p>
+<p>So if Squealer TNT wants to play a sound, this is the sequence:</p>
+<ol>
+<li>The game writes parameters to a file, DS4QB2.DAT</li>
+<li>The game writes a value to port 0 and waits for it to be cleared</li>
+<li>DS4QB2 continuously polls port 0 and detects the audio request</li>
+<li>DS4QB2 reads the parameters from DS4QB2.DAT and plays a sound</li>
+<li>DS4QB2 clears port 0 and the game resumes</li>
+</ol>
+<p>It was a cursed solution. Windows NT didn’t use DOS as a bootstrap and it’s NTVDM DOS layer restricts access to all but a few resources. Within a few years, most computers ran Windows XP or Vista and no game that used DS4QB2 could enable audio: the games would place a value on an isolated port 0 and wait forever for nothing to respond.</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/6R1zwryHHF-498.avif 498w"><source type="image/webp" srcset="/blog/ds4qb-web/6R1zwryHHF-498.webp 498w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/6R1zwryHHF-498.png" alt="A cursed monkey's paw granting a wish" width="498" height="379"></picture>
+<br><em>”I wish I could use DirectSound for my QuickBASIC game”</em></p>
+<h2 id="signals-from-beyond-the-veil">Signals From Beyond The Veil</h2>
+<p>In order to bring this game’s audio back to life, it needs an audio server to play sounds. So instead of a Windows application, we'll use a Javascript routine outside the emulator</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/Ow7POT9SDa-1416.avif 1416w"><source type="image/webp" srcset="/blog/ds4qb-web/Ow7POT9SDa-1416.webp 1416w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/Ow7POT9SDa-1416.svg" alt="Diagram showing SQUALER running in an emulator and talking to a javascript process" width="1416" height="547"></picture></p>
+<p>The first order of business is to detect that signal on port 0. Thankfully, V86 has some undocumented APIs to access the emulated PC's I/O ports and being Javascript, nothing can stop me from using them. DS4QB2 polls the I/O port every 50ms, so I tried doing the same:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">emulator<span class="token punctuation">.</span><span class="token function">add_listener</span><span class="token punctuation">(</span><span class="token string">"emulator-ready"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> portValue <span class="token operator">=</span>  emulator<span class="token punctuation">.</span>v86<span class="token punctuation">.</span>cpu<span class="token punctuation">.</span>io<span class="token punctuation">.</span><span class="token function">port_read8</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>portValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>I start the emulator, run SQUEALER:</p>
+<video autoplay="" loop="" muted="" title="Browser console showing a value on port 0">
+  <source src="ping.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<p>Yes! DS4QB2 uses different values for different commands. A value of 3 means “load sounds”. The game is trying to load sounds!</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/cJq0dNmZdC-1240.avif 1240w"><source srcset="/blog/ds4qb-web/cJq0dNmZdC-1240.heif 1240w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/cJq0dNmZdC-1240.webp" alt="" width="1240" height="744"></picture>
+<em>Basically this feeling, but with cartoon pig noises</em></p>
+<h2 id="an-unexpected-medium">An Unexpected Medium</h2>
+<p>Detecting the I/O port is great, but the parameters for the audio command are stuffed in a file on the emulated disk drive. V86 has a file API, but the guest needs to support 9P network filesystem protocol. MS-DOS 6.22 does <em>not</em> have a driver for the 9P network filesystem protocol.</p>
+<p>No, this calls for a much stupider solution. V86 allows a user to supply an ArrayBuffer instead of a URL for the hard disk.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>‘hda<span class="token punctuation">.</span>img’<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> hdaBuffer <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">arrayBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> emulator <span class="token operator">=</span> window<span class="token punctuation">.</span>emulator <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">V86</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        <span class="token comment">// …</span>
+        <span class="token literal-property property">hda</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">buffer</span><span class="token operator">:</span> hdaBuffer <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// …</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>What happens inside that array buffer when the guest uses the disk? Does V86 keep its contents cached into some rarely synchronized internal data structure like DOSBox does? Or does V86 actually perform block-level reads and writes directly to that buffer? To check, I used a <a href="https://stackoverflow.com/questions/35038884/download-file-from-bytes-in-javascript">Javascript trick</a> to convert the buffer to a URL and then download it:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> blob <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Blob</span><span class="token punctuation">(</span><span class="token punctuation">[</span>image<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'application/octet-stream'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> url <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token constant">URL</span><span class="token punctuation">.</span><span class="token function">createObjectURL</span><span class="token punctuation">(</span>blob<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> a <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+a<span class="token punctuation">.</span>href <span class="token operator">=</span> url<span class="token punctuation">;</span>
+a<span class="token punctuation">.</span>download <span class="token operator">=</span> <span class="token string">'hda.img'</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+a<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token string">'none'</span>
+a<span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+a<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> window<span class="token punctuation">.</span><span class="token constant">URL</span><span class="token punctuation">.</span><span class="token function">revokeObjectURL</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </code></pre>
+<p>This downloads “hda.img” after detecting the signal. I mounted the image and there was DS4QB2.DAT, containing a text-formatted list of sound files to load. It wrote the file to the buffer!</p>
+<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/Pv1c2uBFo9-1216.avif 1216w"><source type="image/webp" srcset="/blog/ds4qb-web/Pv1c2uBFo9-1216.webp 1216w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/Pv1c2uBFo9-1216.png" alt="Screenshot of finder showing DS4QB2.DAT inside the HD image" width="1216" height="882"></picture></p>
+<h2 id="hacks-all-the-way-down">Hacks All The Way Down</h2>
+<p>So, the HDA array buffer likely contains the contents of the hard disk, as long as DOS isn't buffering the file. But I need a way to read files off the disk <em>while the game is running</em>.</p>
+<p>Sometimes, though, stars just align: a few years ago, I wrote a <a href="https://github.com/parkertomatoes/fatfs-wasm">WASM wrapper library</a> for ChaN’s elegant FatFS library for reading from FAT formatted disks like DOS uses. I intended it for <a href="https://parkertomatoes.github.io/basbolt">BasBolt</a>, but ended up not using it and it was left to rot. Until now!</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> disk <span class="token operator">=</span> <span class="token keyword">await</span> FatFsDisk<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>hdaImage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// ...</span>
+<span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> portValue <span class="token operator">=</span>  emulator<span class="token punctuation">.</span>v86<span class="token punctuation">.</span>cpu<span class="token punctuation">.</span>io<span class="token punctuation">.</span><span class="token function">port_read8</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>portValue <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> params <span class="token operator">=</span> disk<span class="token punctuation">.</span><span class="token function">session</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> disk<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span>‘<span class="token constant">DS4QB2</span><span class="token punctuation">.</span><span class="token constant">DAT</span>’<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TextDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>And sure enough:
+<picture><source type="image/avif" srcset="/blog/ds4qb-web/5vWiCZX47t-640.avif 640w"><source type="image/webp" srcset="/blog/ds4qb-web/5vWiCZX47t-640.webp 640w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/5vWiCZX47t-640.png" alt="Screenshot showing the contents of DS4QB2.DAT in the console" width="640" height="344"></picture>
+<em>For a fleeting moment, I was a god</em></p>
+<h2 id="then-draw-the-rest-of-the-owl">Then Draw The Rest Of The Owl</h2>
+<p>After getting the signal and the parameters, the rest of the effort was grunt-work to decode the audio protocol, then reproduce the effect using Javascript. When a command to play a sound was sent, I used <a href="https://howlerjs.com/">Howler.js</a>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> soundContent <span class="token operator">=</span> disk<span class="token punctuation">.</span><span class="token function">session</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> disk<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>soundFile<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> blob <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Blob</span><span class="token punctuation">(</span><span class="token punctuation">[</span>soundContent<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">type</span><span class="token operator">:</span> 'audio<span class="token operator">/</span>wav <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> soundHandle <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Howl</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">src</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token constant">URL</span><span class="token punctuation">.</span><span class="token function">createObjectURL</span><span class="token punctuation">(</span>blob<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">format</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'wav'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+soundHandle<span class="token punctuation">.</span><span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>And to play tracker music, I used <a href="https://github.com/DrSnuggles/chiptune">chiptune3.js</a>, a wrapper around the excellent <a href="https://openmpt.org/">OpenMPT</a> library that plays everything from XM files to MO3. There is a library for literally everything:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> musicContent <span class="token operator">=</span> disk<span class="token punctuation">.</span><span class="token function">session</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> disk<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>musicFile<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> musicHandle <span class="token keyword">new</span> <span class="token class-name">ChiptuneJsPlayer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+musicHandle<span class="token punctuation">.</span><span class="token function">onInitialized</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    musicHandle<span class="token punctuation">.</span><span class="token function">play</span><span class="token punctuation">(</span>musicContent<span class="token punctuation">.</span>buffer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>After processing the command and writing 0 back to the port, the game unblocks. At last, glorious squealing mayhem!</p>
+<video autoplay="" loop="" muted="" title="A pig dancing to the caption 'Wesley smoked some bacon!'">
+  <source src="wesley.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<em>You can play the game with audio <a href="https://parkertomatoes.github.io/ds4qb-web-demo/?game=squealer">here</a></em>
+<h2 id="the-end-product">The End Product</h2>
+<p>I published the V86 + DS4QB emulator on GitHub here:</p>
+<ul>
+<li><a href="https://github.com/parkertomatoes/ds4qb-web">Library</a></li>
+<li><a href="https://github.com/parkertomaotes/ds4qb-web">Example Project</a></li>
+<li><a href="https://parkertomatoes.github.io/ds4qb-web-demo">Sample Gallery with 30 DS4QB games and apps</a></li>
+</ul>
+<p>I don't expect anyone to actually use this as a library, but structuring it this way was a nice way to separate the business logic of the emulator from the Vite configuration and game binaries of the client application.</p>
+<p>This post is long, so I plan to make two follow-ups for some tangents:</p>
+<ol>
+<li>Supporting DS4QB1, which used the <em>clipboard</em> to communicate</li>
+<li>Some curious PIT shenanigans that caused some DS4QB games to hang</li>
+</ol>
+<h2 id="learnings">Learnings</h2>
+<p>I used V86 on this project, and it remains my favorite PC emulator for its accessibility and hackability. There a few notes</p>
+<ul>
+<li>I wish there was more documentation for the hardware interfaces. It would be neat but daunting to try to emulate a virt-io device or something like a PCL printer.</li>
+<li>I constantly wished for a way to create user-defined interrupts to replace DOS drivers. Being able to register ports with the undocumented CPU API is useful but feels hacky</li>
+<li>V86 doesn't bundle well and isn't distributed on npm officially. It would be much easier to use if it were, and as a bonus I could use a CDN for little projects like this.</li>
+</ul>
+<p>During this project I spent time scouring old QBasic community sites for games that used DS4QB2, 20 years after I'd last been there:</p>
+<ul>
+<li>I'm still impressed how <em>big</em> this niche community was back then. Zines, networks, busy forums, and hundreds of projects.</li>
+<li>By 2002-2003, after most AAA software had largely moved on, over half of the games in the Total DOS Collection appear to be made with QBasic or QuickBASIC.</li>
+</ul>
+<p>This project was also my first time using Vite and Rollup instead of Webpack:</p>
+<ul>
+<li>vitest is amazing, it just worked out of the box</li>
+<li>Vite's dev server, however, incredibly frustrating to debug.
+<ul>
+<li>It didn't serve WASM and Web Workers, instead returning index.html</li>
+<li>This was solved by excluding buggy dependencies from optimizeDeps<pre class="language-json" tabindex="0"><code class="language-json">optimizeDeps<span class="token operator">:</span> <span class="token punctuation">{</span>
+    exclude<span class="token operator">:</span> <span class="token punctuation">[</span>'fatfs-wasm'<span class="token punctuation">,</span> 'chiptune3'<span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span></code></pre>
+</li>
+<li>Solved in the production build with the Vite static copy plugin</li>
+</ul>
+</li>
+<li>Vite uses absolute links, which was frustrating if I wanted to test at &quot;/&quot; and deploy to &quot;/subfolder&quot;. I ended up patching the minified Javascript output.</li>
+</ul>
+
+
+			</heading-anchors>
+		</main>
+
+		<footer>
+		</footer>
+
+		<!-- This page `/blog/ds4qb-web/` was built on 2025-01-11T14:33:55.489Z -->
+		<script type="module" src="/dist/rJ3_G-2ArF.js"></script>
+	</body>
+</html>
