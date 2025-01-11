@@ -2,12 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	
 	<url>
-		<loc>https://parkertomatoes.github.io/blog/ds4qb-web/</loc>
+		<loc>https://parkertomatoes.github.io/blog/blog/ds4qb-web/</loc>
 		<lastmod>2025-01-11</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://parkertomatoes.github.io/about/</loc>
+		<loc>https://parkertomatoes.github.io/blog/about/</loc>
+		<lastmod>2025-01-11</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://parkertomatoes.github.io/blog/blog/</loc>
 		<lastmod>2025-01-11</lastmod>
 	</url>
 	
@@ -17,22 +22,17 @@
 	</url>
 	
 	<url>
-		<loc>https://parkertomatoes.github.io/</loc>
+		<loc>https://parkertomatoes.github.io/blog/tags/</loc>
 		<lastmod>2025-01-11</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://parkertomatoes.github.io/tags/</loc>
+		<loc>https://parkertomatoes.github.io/blog/github/</loc>
 		<lastmod>2025-01-11</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://parkertomatoes.github.io/github/</loc>
-		<lastmod>2025-01-11</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://parkertomatoes.github.io/feed/feed.xml</loc>
+		<loc>https://parkertomatoes.github.io/blog/feed/feed.xml</loc>
 		<lastmod>2025-01-11</lastmod>
 	</url>
 </urlset>

@@ -457,14 +457,14 @@ header {
 		<a href="#skip" class="visually-hidden">Skip to main content</a>
 
 		<header>
-			<a href="/" class="home-link">Novelty Ice Cubes</a>
+			<a href="/blog/" class="home-link">Novelty Ice Cubes</a>
 			<nav>
 				<h2 class="visually-hidden" id="top-level-navigation-menu">Top level navigation menu</h2>
 				<ul class="nav">
-					<li class="nav-item"><a href="/">Home</a></li>
-					<li class="nav-item"><a href="/blog/">Archive</a></li>
-					<li class="nav-item"><a href="/about/">About</a></li>
-					<li class="nav-item"><a href="/feed/feed.xml">Feed</a></li>
+					<li class="nav-item"><a href="/blog/">Home</a></li>
+					<li class="nav-item"><a href="/blog/blog/">Archive</a></li>
+					<li class="nav-item"><a href="/blog/about/">About</a></li>
+					<li class="nav-item"><a href="/blog/feed/feed.xml">Feed</a></li>
 					<li class="nav-item"><a href="https://github.com/parkertomatoes">Github</a></li>
 				</ul>
 			</nav>
@@ -510,12 +510,12 @@ header {
         <span class="token literal-property property">autostart</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Sure enough, this boots up a DOS prompt. I type SQUEALER to run the game, but it doesn’t even start. It hangs with a strange error:</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/yVLb0_E3Of-1280.avif 1280w"><source type="image/webp" srcset="/blog/ds4qb-web/yVLb0_E3Of-1280.webp 1280w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/yVLb0_E3Of-1280.png" alt="Error saying &quot;Illegal command: start&quot;" width="1280" height="800"></picture></p>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/yVLb0_E3Of-1280.avif 1280w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/yVLb0_E3Of-1280.webp 1280w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/yVLb0_E3Of-1280.png" alt="Error saying &quot;Illegal command: start&quot;" width="1280" height="800"></picture></p>
 <h2 id="a-porcine-anachronism">A Porcine Anachronism</h2>
 <p>Squealer TNT is already strange in that it’s a DOS game written in 2002. It’s further strange in that it uses <a href="https://web.archive.org/web/20010612125157fw_/http://www.aethersoft.com/html/products.htm">DS4QB2</a> as its sound driver. The game runs in real-mode DOS due to it being written with Microsoft QuickBASIC. In order to bust out of the limitations of real mode it <em>cheats</em> by running a command, <code>START DS4QB2.EXE</code>. This is a Win9X Visual Basic program that runs in the background and plays sounds using the BASS audio library.</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/OvoOETSUnb-1298.avif 1298w"><source type="image/webp" srcset="/blog/ds4qb-web/OvoOETSUnb-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/OvoOETSUnb-1298.svg" alt="Diagram showing " width="1298" height="496"></picture></p>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/OvoOETSUnb-1298.avif 1298w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/OvoOETSUnb-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/OvoOETSUnb-1298.svg" alt="Diagram showing " width="1298" height="496"></picture></p>
 <p>The DS4QB2 sound engine takes a &quot;hold my beer&quot; approach to inter-process communication. 16-bit DOS programs in Windows 95 are supposed to be isolated in their little VM86 shell, but thanks to the <a href="https://devblogs.microsoft.com/oldnewthing/20071224-00/?p=24063">insanely complex</a> 16-bit driver fallback mechanism of Windows 95, both 16-bit and 32-bit programs are granted shared access to the legacy DMA controller for floppy disk transfers and ISA cards. DOS programs signal DS4QB2 by writing to the DMA channel 0 address line (aka port 0). And it passes parameters by writing them to a file.</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/cUrbVCwsia-1298.avif 1298w"><source type="image/webp" srcset="/blog/ds4qb-web/cUrbVCwsia-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/cUrbVCwsia-1298.svg" alt="Diagram showing " width="1298" height="1014"></picture>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/cUrbVCwsia-1298.avif 1298w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/cUrbVCwsia-1298.webp 1298w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/cUrbVCwsia-1298.svg" alt="Diagram showing " width="1298" height="1014"></picture>
 <em>You may want to avoid playing this game from a floppy drive</em></p>
 <p>So if Squealer TNT wants to play a sound, this is the sequence:</p>
 <ol>
@@ -526,11 +526,11 @@ header {
 <li>DS4QB2 clears port 0 and the game resumes</li>
 </ol>
 <p>It was a cursed solution. Windows NT didn’t use DOS as a bootstrap and it’s NTVDM DOS layer restricts access to all but a few resources. Within a few years, most computers ran Windows XP or Vista and no game that used DS4QB2 could enable audio: the games would place a value on an isolated port 0 and wait forever for nothing to respond.</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/6R1zwryHHF-498.avif 498w"><source type="image/webp" srcset="/blog/ds4qb-web/6R1zwryHHF-498.webp 498w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/6R1zwryHHF-498.png" alt="A cursed monkey's paw granting a wish" width="498" height="379"></picture>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/6R1zwryHHF-498.avif 498w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/6R1zwryHHF-498.webp 498w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/6R1zwryHHF-498.png" alt="A cursed monkey's paw granting a wish" width="498" height="379"></picture>
 <br><em>”I wish I could use DirectSound for my QuickBASIC game”</em></p>
 <h2 id="signals-from-beyond-the-veil">Signals From Beyond The Veil</h2>
 <p>In order to bring this game’s audio back to life, it needs an audio server to play sounds. So instead of a Windows application, we'll use a Javascript routine outside the emulator</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/Ow7POT9SDa-1416.avif 1416w"><source type="image/webp" srcset="/blog/ds4qb-web/Ow7POT9SDa-1416.webp 1416w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/Ow7POT9SDa-1416.svg" alt="Diagram showing SQUALER running in an emulator and talking to a javascript process" width="1416" height="547"></picture></p>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/Ow7POT9SDa-1416.avif 1416w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/Ow7POT9SDa-1416.webp 1416w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/Ow7POT9SDa-1416.svg" alt="Diagram showing SQUALER running in an emulator and talking to a javascript process" width="1416" height="547"></picture></p>
 <p>The first order of business is to detect that signal on port 0. Thankfully, V86 has some undocumented APIs to access the emulated PC's I/O ports and being Javascript, nothing can stop me from using them. DS4QB2 polls the I/O port every 50ms, so I tried doing the same:</p>
 <pre class="language-js" tabindex="0"><code class="language-js">emulator<span class="token punctuation">.</span><span class="token function">add_listener</span><span class="token punctuation">(</span><span class="token string">"emulator-ready"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
@@ -544,7 +544,7 @@ header {
   Your browser does not support the video tag.
 </video>
 <p>Yes! DS4QB2 uses different values for different commands. A value of 3 means “load sounds”. The game is trying to load sounds!</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/cJq0dNmZdC-1240.avif 1240w"><source srcset="/blog/ds4qb-web/cJq0dNmZdC-1240.heif 1240w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/cJq0dNmZdC-1240.webp" alt="" width="1240" height="744"></picture>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/cJq0dNmZdC-1240.avif 1240w"><source srcset="/blog/blog/ds4qb-web/cJq0dNmZdC-1240.heif 1240w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/cJq0dNmZdC-1240.webp" alt="" width="1240" height="744"></picture>
 <em>Basically this feeling, but with cartoon pig noises</em></p>
 <h2 id="an-unexpected-medium">An Unexpected Medium</h2>
 <p>Detecting the I/O port is great, but the parameters for the audio command are stuffed in a file on the emulated disk drive. V86 has a file API, but the guest needs to support 9P network filesystem protocol. MS-DOS 6.22 does <em>not</em> have a driver for the 9P network filesystem protocol.</p>
@@ -570,7 +570,7 @@ a<span class="token punctuation">.</span><span class="token function">click</spa
 a<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> window<span class="token punctuation">.</span><span class="token constant">URL</span><span class="token punctuation">.</span><span class="token function">revokeObjectURL</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </code></pre>
 <p>This downloads “hda.img” after detecting the signal. I mounted the image and there was DS4QB2.DAT, containing a text-formatted list of sound files to load. It wrote the file to the buffer!</p>
-<p><picture><source type="image/avif" srcset="/blog/ds4qb-web/Pv1c2uBFo9-1216.avif 1216w"><source type="image/webp" srcset="/blog/ds4qb-web/Pv1c2uBFo9-1216.webp 1216w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/Pv1c2uBFo9-1216.png" alt="Screenshot of finder showing DS4QB2.DAT inside the HD image" width="1216" height="882"></picture></p>
+<p><picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/Pv1c2uBFo9-1216.avif 1216w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/Pv1c2uBFo9-1216.webp 1216w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/Pv1c2uBFo9-1216.png" alt="Screenshot of finder showing DS4QB2.DAT inside the HD image" width="1216" height="882"></picture></p>
 <h2 id="hacks-all-the-way-down">Hacks All The Way Down</h2>
 <p>So, the HDA array buffer likely contains the contents of the hard disk, as long as DOS isn't buffering the file. But I need a way to read files off the disk <em>while the game is running</em>.</p>
 <p>Sometimes, though, stars just align: a few years ago, I wrote a <a href="https://github.com/parkertomatoes/fatfs-wasm">WASM wrapper library</a> for ChaN’s elegant FatFS library for reading from FAT formatted disks like DOS uses. I intended it for <a href="https://parkertomatoes.github.io/basbolt">BasBolt</a>, but ended up not using it and it was left to rot. Until now!</p>
@@ -584,7 +584,7 @@ a<span class="token punctuation">.</span><span class="token function">remove</sp
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>And sure enough:
-<picture><source type="image/avif" srcset="/blog/ds4qb-web/5vWiCZX47t-640.avif 640w"><source type="image/webp" srcset="/blog/ds4qb-web/5vWiCZX47t-640.webp 640w"><img loading="lazy" decoding="async" src="/blog/ds4qb-web/5vWiCZX47t-640.png" alt="Screenshot showing the contents of DS4QB2.DAT in the console" width="640" height="344"></picture>
+<picture><source type="image/avif" srcset="/blog/blog/ds4qb-web/5vWiCZX47t-640.avif 640w"><source type="image/webp" srcset="/blog/blog/ds4qb-web/5vWiCZX47t-640.webp 640w"><img loading="lazy" decoding="async" src="/blog/blog/ds4qb-web/5vWiCZX47t-640.png" alt="Screenshot showing the contents of DS4QB2.DAT in the console" width="640" height="344"></picture>
 <em>For a fleeting moment, I was a god</em></p>
 <h2 id="then-draw-the-rest-of-the-owl">Then Draw The Rest Of The Owl</h2>
 <p>After getting the signal and the parameters, the rest of the effort was grunt-work to decode the audio protocol, then reproduce the effect using Javascript. When a command to play a sound was sent, I used <a href="https://howlerjs.com/">Howler.js</a>:</p>
@@ -655,7 +655,7 @@ musicHandle<span class="token punctuation">.</span><span class="token function">
 		<footer>
 		</footer>
 
-		<!-- This page `/blog/ds4qb-web/` was built on 2025-01-11T14:33:55.489Z -->
-		<script type="module" src="/dist/rJ3_G-2ArF.js"></script>
+		<!-- This page `/blog/ds4qb-web/` was built on 2025-01-11T14:41:28.773Z -->
+		<script type="module" src="/blog/dist/rJ3_G-2ArF.js"></script>
 	</body>
 </html>
