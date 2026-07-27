@@ -3742,7 +3742,7 @@ select {
   grid-template-columns: 12px 16px max-content;
   align-items: center;
   gap: 4px;
-  width: max-content;
+  width: 100%;
   min-width: 0;
   min-height: 21px;
   padding-top: 1px;
@@ -3823,6 +3823,17 @@ select {
 .tree-row.selected .tree-name {
   background: #000080;
   color: #fff;
+}
+
+.tree-row.drop-target .tree-name {
+  background: #000080;
+  color: #fff;
+  outline: 1px dotted #fff;
+  outline-offset: -1px;
+}
+
+.file-panel-body.drop-target .tree-root {
+  box-shadow: inset 0 0 0 1px #000080;
 }
 
 .panel-resizer {
